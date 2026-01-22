@@ -1,0 +1,18 @@
+open two terminals
+
+if u see 
+(venv) in terminal then ok
+if u dont then use
+
+venv\Scripts\Activate
+
+in one terminal enter
+
+cd frontend
+npm install
+npm run dev
+
+in other terminal
+
+cd backend
+uvicorn main:app --reload
