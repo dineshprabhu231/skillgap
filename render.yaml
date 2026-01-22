@@ -1,0 +1,48 @@
+# Render Blueprint - Deploy entire app with one click
+# https://render.com/docs/blueprint-spec
+
+services:
+  # Backend API (FastAPI)
+  - type: web
+    name: sgip-backend
+    runtime: python
+    region: oregon
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.0
+      - key: GEMINI_API_KEY
+        sync: false  # You'll set this manually in Render dashboard
+      - key: DATABASE_URL
+        fromDatabase:
+          name: sgip-database
+          property: connectionString
+      - key: FRONTEND_URL
+        value: https://sgip-frontend.onrender.com
+    rootDir: backend
+    healthCheckPath: /health
+
+  # Frontend (Next.js)
+  - type: web
+    name: sgip-frontend
+    runtime: node
+    region: oregon
+    plan: free
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    envVars:
+      - key: NODE_VERSION
+        value: 20
+      - key: NEXT_PUBLIC_API_URL
+        value: https://sgip-backend.onrender.com
+    rootDir: frontend
+
+# PostgreSQL Database
+databases:
+  - name: sgip-database
+    region: oregon
+    plan: free
+    databaseName: sgip
+    user: sgip_user

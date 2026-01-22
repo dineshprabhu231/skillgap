@@ -1,5 +1,6 @@
 import axios from 'axios'
 
+// In production, set NEXT_PUBLIC_API_URL to your backend URL (e.g., https://your-app.railway.app)
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
 
 const api = axios.create({
@@ -7,6 +8,7 @@ const api = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
+  timeout: 30000, // 30 second timeout for AI operations
 })
 
 // Authentication removed for now - no token needed
